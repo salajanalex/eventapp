@@ -16,8 +16,22 @@ app.listen(8000, () => {
     console.log('Server started!');
 });
 
+/**
+ * CRUD FOR USER
+ */
 
+//structure needed to create new Users
+var User = function (usertype, firstname, lastname, email, password) {
+    this.usertype = usertype;
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.email = email;
+    this.password = password;
+}
 
+/**
+ * GET ALL USERS
+ */
 app.route('/api/users').get((req, res) => {
     connection.getConnection(function (error, tempCont) {
         if (error) {
@@ -38,19 +52,6 @@ app.route('/api/users').get((req, res) => {
         }
     });
 });
-
-/**
- * CRUD FOR USER
- */
-
-//structure needed to create new Users
-var User = function (usertype, firstname, lastname, email, password) {
-    this.usertype = usertype;
-    this.firstname = firstname;
-    this.lastname = lastname;
-    this.email = email;
-    this.password = password;
-}
 
 /**
  * SELECT USER WITH GIVEN ID AND SPECIFIC TYPE 
@@ -88,7 +89,7 @@ app.route('/api/users/get/:id').get((req, res) => {
 /**
  * CREATE NEW USER
  */
-app.route('/api/users/new').get((req, res) => {
+app.route('/api/users/new').post((req, res) => {
 
     var user = new User("aaa", "aaa", "aaa", "aaa", "aaa");
 
@@ -117,7 +118,7 @@ app.route('/api/users/new').get((req, res) => {
 /**
  * UPDATE USER WITH GIVEN ID
  */
-app.route('/api/users/update/:id').get((req, res) => {
+app.route('/api/users/update/:id').put((req, res) => {
     const requestedID = req.params['id'];
 
     if (isNaN(requestedID)) {
@@ -125,7 +126,7 @@ app.route('/api/users/update/:id').get((req, res) => {
         return;
     }
 
-    var updatedUser = new User("aaa", "aaa", "aaa", "aaa", "aaa");
+    var updatedUser = new User("bbb", "bbb", "bbb", "bbb", "bbb");
 
     connection.getConnection(function (error, tempCont) {
         if (error) {
@@ -151,7 +152,7 @@ app.route('/api/users/update/:id').get((req, res) => {
 /**
  * DELETE USER BY ID
  */
-app.route('/api/users/delete/:id').get((req, res) => {
+app.route('/api/users/delete/:id').delete((req, res) => {
     const requestedID = req.params['id'];
 
     if (isNaN(requestedID)) {

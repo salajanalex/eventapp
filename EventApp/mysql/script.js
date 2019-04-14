@@ -10,13 +10,13 @@ var connection = mysql.createPool({ //folosim createPool pt a reduce nr de reque
     connectionLimit: 50, // am setat numarul cu 50 de exemplu 
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'megabas',
     database: 'eventdb'
 
 });
 
 // Un get pt toti useri
-app.get('/', function (req,resp){
+app.get('', function (req,resp){
     //about mysql
 
     connection.getConnection(function(error, tempCont){

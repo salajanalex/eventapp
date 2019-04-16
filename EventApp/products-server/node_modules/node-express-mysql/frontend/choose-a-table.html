@@ -1,0 +1,6 @@
+<div ng-controller="choose-a-table-list">
+		Please choose a table:
+		<div ng-repeat="(key,value) in tables" g-controller="choose-a-table-one">
+				<button ng-click="clickChooseTable(value)" class="btn btn-link">{{value.TABLE_NAME}}</button>
+		</div>
+</div>

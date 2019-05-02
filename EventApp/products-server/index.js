@@ -7,6 +7,8 @@ const app = express();
 
 
 const SELECT_ALL_USER_QUERY = 'SELECT * FROM user';
+const SELECT_ALL_TICKETS_QUERY = 'SELECT * FROM ticket';
+const SELECT_ALL_EVENTS_QUERY = 'SELECT * FROM event';
 
 const connection = mysql.createConnection({
     host:'localhost',
@@ -42,8 +44,61 @@ app.get('/users/add',(req,res)=>{
   })
 })
 
+app.get('/tickets/add',(req,res)=>{
+    const{ idticket,type,price,idevent,iduser} = req.query;
+  const INSERT_TICKET_QUERY = `INSERT INTO ticket (idticket,type,price,idevent,iduser) VALUES ('${idticket}','${type}','${price}','${idevent}','${iduser}')`;
+  connection.query(INSERT_TICKET_QUERY,(err,results)=>{
+      if(err){
+          return res.send(err)
+      }
+      else{
+          return res.send('successfully added user')
+      }
+  })
+})
+
+app.get('/events/add',(req,res)=>{
+    const{ idevent,name,description,idvenue,idcategory} = req.query;
+  const INSERT_EVENT_QUERY = `INSERT INTO event (idevent,name,description,idvenue,idcategory) VALUES ('${idevent}','${name}','${description}','${idvenue}','${idcategory}')`;
+  connection.query(INSERT_EVENT_QUERY,(err,results)=>{
+      if(err){
+          return res.send(err)
+      }
+      else{
+          return res.send('successfully added user')
+      }
+  })
+})
+
 app.get('/users',(req,res) =>{
     connection.query(SELECT_ALL_USER_QUERY,(err,results)=>{
+        if(err){
+            return res.send(err);
+        }
+        else{
+            res.json({
+                data: results
+            })
+        }
+       })
+})
+
+app.get('/tickets',(req,res) =>{
+    connection.query(SELECT_ALL_TICKETS_QUERY,(err,results)=>{
+        if(err){
+            return res.send(err);
+        }
+        else{
+            res.json({
+                data: results
+            })
+        }
+       })
+})
+
+
+app.get('/events',(req,res) =>{
+    connection.query(SELECT_ALL_EVENTS_QUERY,(err,results)=>{
         if(err){
             return res.send(err);
         }
@@ -58,4 +113,5 @@ app.get('/users',(req,res) =>{
 app.listen(4000,()=>{
 
     console.log(`server listens on  port 4000`)
-})
+    
+}) 

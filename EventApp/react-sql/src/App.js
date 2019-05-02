@@ -3,9 +3,11 @@ import React ,{Component} from 'react'
 import ReactTable from "react-table"
 import './style.css'
 import 'react-table/react-table.css'
+import ticket from "./ticket";
+import event from "./event";
+import {Link,Router,Route} from "react-router";
 
 import {Navbar,Nav,ButtonToolbar,Button} from 'react-bootstrap'
-
 
 
 
@@ -17,18 +19,23 @@ class App extends Component{
     state={
         users: [],
         user:{
-            iduser: '',
-            usertype: '',
-            firstname: '',
-            lastname: '',
-            email:'',
-            password:''
+          iduser: '',
+          usertype: '',
+          firstname: '',
+          lastname: '',
+          email:'',
+          password:''
+          
+        },
 
-        }
+
+    
     }
+    
 
     componentDidMount(){
     this.getUsers();
+    
     }
 
     getUsers  = _ => {
@@ -37,6 +44,8 @@ class App extends Component{
         .then(response => this.setState({users: response.data}))
         .catch(err => console.error(err) )
     }
+
+ 
 
     addUser = _ => {
         const user = this.state.user;
@@ -47,13 +56,20 @@ class App extends Component{
 
 
     }
+
+ 
+
     
 
     
     renderUser = ({iduser,usertype,firstname,lastname,email,password}) => <div key={iduser}>{usertype}>{firstname}>{lastname}>{email}>{password}</div>
+    
+    
 
     render(){
         const data = this.state.users
+        
+       
     
 
         const columns = [{
@@ -76,9 +92,12 @@ class App extends Component{
             accessor: 'password'
           },
        ]
+
+  
     
 
         const {users,user} = this.state;
+       
 
       
 
@@ -91,20 +110,32 @@ class App extends Component{
     <Navbar.Brand href="#home">EventApp</Navbar.Brand>
     <Nav className="mr-auto">
       <Nav.Link href="#">Home</Nav.Link>
-      <Nav.Link href="#">Events</Nav.Link>
-      <Nav.Link href="#">Tickets</Nav.Link>
+      <Nav.Link href="http://localhost:3000/events" component={event}>Events</Nav.Link>
+      <Nav.Link href="http://localhost:3000/tickets" component={ticket}>Tickets</Nav.Link>
       <Nav.Link href="http://localhost:3000">Users</Nav.Link>
+
+
       
     </Nav>
     </Navbar>
+
+    <div>
+      <ticket />
+    </div>
 
 
             <ReactTable
             data={data}
             columns={columns}
             />
+{/* users.map(this.renderUser) */}
 
-            {/*users.map(this.renderUser)*/}
+            
+            
+
+
+
+            tickets.map(this.renderTickets)  */}
 
             <div>
                 <input value ={user.iduser} placeholder="idUser" onChange={e => this.setState({ user: { ...user, iduser: e.target.value }})} />
@@ -122,6 +153,9 @@ class App extends Component{
 
 
             </div>
+
+
+          
 
             
 

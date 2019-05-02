@@ -10,7 +10,7 @@ var connection = mysql.createPool({ //folosim createPool pt a reduce nr de reque
     connectionLimit: 50, // am setat numarul cu 50 de exemplu 
     host: 'localhost',
     user: 'root',
-    password: 'megabas',
+    password: 'MyNewPass',
     database: 'eventdb'
 
 });

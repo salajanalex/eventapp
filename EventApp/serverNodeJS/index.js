@@ -7,6 +7,8 @@ const app = express();
 
 
 const SELECT_ALL_USER_QUERY = 'SELECT * FROM user';
+const SELECT_ALL_EVENTS_QUERY = 'SELECT * FROM event';
+const SELECT_ALL_TICKETS_QUERY = 'SELECT * FROM ticket';
 
 const connection = mysql.createConnection({
     host:'localhost',
@@ -26,7 +28,10 @@ connection.connect(err =>{
 app.use(cors());
 
 app.get('/',(req,res)=>{
-res.send('go to /users to see users')
+res.send(' /users to see -> users OR  /events to see -> events OR /tickets to see -> tickets ')
+
+
+
 })
 
 app.get('/users/add',(req,res)=>{
@@ -54,6 +59,33 @@ app.get('/users',(req,res) =>{
         }
        })
 })
+
+app.get('/events',(req,res) =>{
+    connection.query(SELECT_ALL_EVENTS_QUERY,(err,results)=>{
+        if(err){
+            return res.send(err);
+        }
+        else{
+            res.json({
+                data: results
+            })
+        }
+       })
+})
+
+app.get('/tickets',(req,res) =>{
+    connection.query(SELECT_ALL_TICKETS_QUERY,(err,results)=>{
+        if(err){
+            return res.send(err);
+        }
+        else{
+            res.json({
+                data: results
+            })
+        }
+       })
+})
+
 
 app.listen(4000,()=>{
 

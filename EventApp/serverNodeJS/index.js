@@ -13,7 +13,7 @@ const SELECT_ALL_TICKETS_QUERY = 'SELECT * FROM ticket';
 const connection = mysql.createConnection({
     host:'localhost',
     user:'root',
-    password:'',
+    password:'megabas',
     database:'eventdb'
 })
 
@@ -43,6 +43,32 @@ app.get('/users/add',(req,res)=>{
       }
       else{
           return res.send('successfully added user')
+      }
+  })
+})
+
+app.get('/users/delete',(req,res)=>{
+    const {email} = req.query;
+  const DELETE_USER_QUERY = `DELETE FROM user WHERE email ='${email}'`;
+  connection.query(DELETE_USER_QUERY,(err,results)=>{
+      if(err){
+          return res.send(err)
+      }
+      else{
+          return res.send('successfully deleted user')
+      }
+  })
+})
+
+app.get('/users/update',(req,res)=>{
+    const{ usertype,firstname,lastname,email,password} = req.query;
+  const INSERT_USER_QUERY = `UPDATE user SET usertype='${usertype}' , firstname='${firstname}', lastname='${lastname}' , password='${password}' WHERE email='${email}';`
+  connection.query(INSERT_USER_QUERY,(err,results)=>{
+      if(err){
+          return res.send(err)
+      }
+      else{
+          return res.send('user updated successfully')
       }
   })
 })

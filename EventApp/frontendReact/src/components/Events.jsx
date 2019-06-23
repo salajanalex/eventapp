@@ -54,7 +54,7 @@ class Events extends React.Component {
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand onClick={() => (this.props.history.push('/'))}>EventApp</Navbar.Brand>
           <Nav className="mr-auto">
-            <Nav.Link onClick={() => (this.props.history.push('/'))}>Home</Nav.Link>
+            <Nav.Link onClick={() => (this.props.history.push('/home'))}>Home</Nav.Link>
             <Nav.Link onClick={() => (this.props.history.push('/events'))}>Events</Nav.Link>
             <Nav.Link onClick={() => (this.props.history.push('/tickets'))}>Tickets</Nav.Link>
             <Nav.Link onClick={() => (this.props.history.push('/users'))}>Users</Nav.Link>

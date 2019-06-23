@@ -13,7 +13,7 @@ const SELECT_ALL_TICKETS_QUERY = 'SELECT * FROM ticket';
 const connection = mysql.createConnection({
     host:'localhost',
     user:'root',
-    password:'megabas',
+    password:'',
     database:'eventdb'
 })
 

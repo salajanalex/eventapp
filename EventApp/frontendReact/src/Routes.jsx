@@ -5,7 +5,7 @@ import Home from './components/Home'
 import Events from './components/Events'
 import Tickets from './components/Tickets'
 import Users from './components/Users'
-
+import Login from './components/Login'
 
 class Routes extends React.Component {
     render(){
@@ -17,9 +17,10 @@ class Routes extends React.Component {
         
        
             
-            <Route path="/" component={Home} exact> 
+            <Route path="/" component={Login} exact> 
             
-                <Route component={Home}/>
+                <Route component={Login}/>
+                <Route path="/home" component = {Home} />
                 <Route path="/events" component={Events}/> 
                 <Route path="/tickets" component={Tickets}/> 
                 <Route path="/users" component={Users}/> 

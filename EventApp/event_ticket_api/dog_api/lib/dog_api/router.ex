@@ -1,11 +1,11 @@
 defmodule Doggos.Router do
   use Plug.Router
   use Timex
-  alias Doggos.Models.User
+  alias Doggos.Models.Ticket
   alias Doggos.Service.EventPublisher
 
   @skip_token_verification %{jwt_skip: true}
-  @skip_token_verification_view %{view: UserView, jwt_skip: true}
+  @skip_token_verification_view %{view: TicketView, jwt_skip: true}
   @auth_url Application.get_env(:doggos, :auth_url)
   @api_port Application.get_env(:doggos, :port)
   @db_table Application.get_env(:doggos, :redb_db)
@@ -22,67 +22,63 @@ defmodule Doggos.Router do
   plug(:dispatch)
 
 
-  get "/" , private: %{view: UserView} do
+  get "/" , private: %{view: TicketView} do
     params = Map.get(conn.params, "filter", %{})
-    email = Map.get(params, "q", "")
+    type = Map.get(params, "q", "")
 
-    {:ok, users} =  User.match("email", email)
+    {:ok, tickets} =  Ticket.match("type", type)
 
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(200, Poison.encode!(users))
+    |> send_resp(200, Poison.encode!(tickets))
   end
 
-  get "/:id", private: %{view: UserView}  do
-    case User.get(id) do
-      {:ok, user} ->
+  get "/:id", private: %{view: TicketView}  do
+    case Ticket.get(id) do
+      {:ok, ticket} ->
         conn
         |> put_resp_content_type("application/json")
-        |> send_resp(200, Poison.encode!(user))
+        |> send_resp(200, Poison.encode!(ticket))
       :error ->
         conn
         |> put_resp_content_type("application/json")
-        |> send_resp(200, Poison.encode!(%{"error" => "'user' not found"}))
+        |> send_resp(200, Poison.encode!(%{"error" => "'ticket' not found"}))
     end
  end
 
   post "/" do
-    {email, usertype, password, lastname, iduser, firstname} = {
-      Map.get(conn.params, "email", nil),
-      Map.get(conn.params, "usertype", nil),
-      Map.get(conn.params, "password", nil),
-      Map.get(conn.params, "lastname", nil),
+    {type, price, iduser, event} = {
+      Map.get(conn.params, "type", nil),
+      Map.get(conn.params, "price", nil),
       Map.get(conn.params, "iduser", nil),
-      Map.get(conn.params, "firstname", nil)
+      Map.get(conn.params, "event", nil)
     }
 
     cond do
-      is_nil(email) ->
+      is_nil(event) ->
         conn
         |> put_status(400)
         |> assign(:jsonapi, %{"error" => "'email' field must be provided"})
-      is_nil(password) ->
+      is_nil(price) ->
         conn
         |> put_status(400)
         |> assign(:jsonapi, %{"error" => "'password' field must be provided"})
       true ->
-        case %User{
-          email: email,
-          usertype: usertype,
-          password: password,
-          lastname: lastname,
+        case %Ticket{
+          type: type,
+          price: price,
           iduser: iduser,
-          firstname: firstname
-        } |> User.save do
-          {:ok, new_user} ->
+          event: event
+        } |> Ticket.save do
+          {:ok, new_ticket} ->
 
             EventPublisher.publish(
              @routing_keys |> Map.get("user_add"),
-             new_user |> Map.take([:id, :email, :usertype, :password, :lastname, :iduser, :firstname]))
+             new_ticket |> Map.take([:id, :type, :price, :iduser, :event]))
 
             conn
             |> put_resp_content_type("application/json")
-            |> send_resp(201, Poison.encode!(%{:data => new_user}))
+            |> send_resp(201, Poison.encode!(%{:data => new_ticket}))
           :error ->
             conn
             |> put_resp_content_type("application/json")
@@ -93,32 +89,28 @@ defmodule Doggos.Router do
   end
 
   put "/:id" do
-    {email, usertype, password, lastname, firstname} = {
-      Map.get(conn.params, "email", nil),
-      Map.get(conn.params, "usertype", nil),
-      Map.get(conn.params, "password", nil),
-      Map.get(conn.params, "lastname", nil),
-      Map.get(conn.params, "firstname", nil)
+    {type, price, iduser, id, event} = {
+      Map.get(conn.params, "type", nil),
+      Map.get(conn.params, "price", nil),
+      Map.get(conn.params, "iduser", nil),
+      Map.get(conn.params, "id", nil),
+      Map.get(conn.params, "event", nil)
     }
 
     cond do
-      is_nil(email) ->
-        conn
-        |> put_status(400)
-        |> assign(:jsonapi, %{"error" => "'email' field must be provided"})
-      is_nil(password) ->
-        conn
-        |> put_status(400)
-        |> assign(:jsonapi, %{"error" => "'password' field must be provided"})
+      # is_nil(event) ->
+      #   conn
+      #   |> put_status(400)
+      #   |> assign(:jsonapi, %{"error" => "'event' field must be provided"})
       true ->
-        case User.get(id) do
-          {:ok, user} ->
-            user.put(:email, email)
-            user.put(:usertype, usertype)
-            user.put(:password, password)
-            user.put(:lastname, lastname)
-            user.put(:firstname, firstname)
-            case user |> User.save do
+        case Ticket.get(id) do
+          {:ok, ticket} ->
+            ticket.put(:type, type)
+            ticket.put(:price, price)
+            ticket.put(:iduser, iduser)
+            ticket.put(:id, id)
+            ticket.put(:event, event)
+            case ticket |> Ticket.save do
               {:ok} ->
                 conn
                 |> put_resp_content_type("application/json")
@@ -131,17 +123,17 @@ defmodule Doggos.Router do
           :error ->
             conn
             |> put_resp_content_type("application/json")
-            |> send_resp(400, Poison.encode!(%{"error" => "'user' not found"}))
+            |> send_resp(400, Poison.encode!(%{"error" => "'ticket' not found"}))
         end
     end
   end
 
   delete "/:id" do
-      case User.delete(id) do
+      case Ticket.delete(id) do
           :ok ->
             conn
             |> put_resp_content_type("application/json")
-            |> send_resp(201, Poison.encode!(%{:message => "user deleted"}))
+            |> send_resp(201, Poison.encode!(%{:message => "ticket deleted"}))
           :error ->
             conn
             |> put_resp_content_type("application/json")

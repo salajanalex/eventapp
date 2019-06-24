@@ -1,0 +1,23 @@
+.welcomePage{
+    
+    text-align: center;
+    position: relative;
+    top:350px;
+  
+  
+}
+
+.welcomeLogin{
+    position:relative;
+    margin:0 auto;
+    clear:left;
+    height:auto;
+    z-index: 0;
+    text-align:center;
+}
+
+.margin{
+    margin-left:10px;
+}
+
+

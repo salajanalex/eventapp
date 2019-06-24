@@ -50,7 +50,7 @@ class Users extends React.Component {
   deleteUser = _ => {
     const user = this.state.user;
     console.log(this.state.selectedUser.id)
-    console.log(this.state.selectedUser.email)
+    console.log(this.state.selectedUser.email);
 
     fetch(`http://localhost:4000/users/delete?email=${this.state.selectedUser.email}`)
       .then(this.getUsers, alert("User Deleted"))

@@ -60,7 +60,7 @@ defmodule Doggos.Endpoint do
     end
   end
 
-  forward("/user", to: Doggos.Router)
+  forward("/ticket", to: Doggos.Router)
 
   match _ do
     send_resp(conn, 404, "Page not found!")

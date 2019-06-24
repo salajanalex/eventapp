@@ -20,15 +20,15 @@ config :doggos,
   api_prefix: "http",
   routing_keys: %{
       # System Events
-      "event_add" => "users.add.event.doggos-events",
-      "event_list" => "users.list.event.doggos-events"
+      "event_add" => "tickets.add.event.doggos-events",
+      "event_list" => "tickets.list.event.doggos-events"
 
     }
 
 config :event_bus_helper,
         url: "guest:guest@localhost",
         exchange: "doggos",
-        queue: "users"
+        queue: "tickets"
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this

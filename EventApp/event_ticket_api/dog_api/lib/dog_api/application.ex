@@ -11,7 +11,7 @@ defmodule Doggos.Application do
     defp children do
      [
      {Plug.Adapters.Cowboy2, scheme: :http,
-     plug: Doggos.Endpoint, options: [port: 4000]},
+     plug: Doggos.Endpoint, options: [port: 4001]},
 
      worker(Doggos.DB.Manager, [[
        name: Doggos.DB.Manager,
